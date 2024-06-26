@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List Cookie</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+
+      input {
+        width: 150px;
+        height: 25px;
+        border-radius: 10px;
+        text-align: center;
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+      }
+
+      #add-task-btn {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        width: 80px;
+        height: 30px;
+        border: none;
+        border-radius: 10px;
+        background-color: rgb(18, 155, 105);
+        color: aliceblue;
+      }
+
+      #add-task-btn:hover {
+        background-color: rgb(25, 203, 129);
+      }
+
+      button {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        width: 80px;
+        height: 30px;
+        border: none;
+        border-radius: 10px;
+        background-color: rgb(198, 15, 64);
+        color: aliceblue;
+      }
+
+      button:hover {
+        background-color: rgb(245, 5, 5);
+      }
+
+      #task-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      #user-input {
+        display: flex;
+        margin-bottom: 10px;
+      }
+
+      #user-input input {
+        margin-right: 10px;
+      }
+
+      #task-list {
+        margin-top: 20px;
+      }
+
+      .task {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: hsl(201, 77%, 61%);
+        border-radius: 10px;
+        text-align: center;
+        font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+          "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+      }
+
+      .task span {
+        margin-right: 10px;
+      }
+
+      .task button {
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="task-container">
+      <h1
+        style="
+          font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        "
+      >
+        Cookie Management
+      </h1>
+      <div id="user-input">
+        <input type="text" id="key-input" placeholder="Key" />
+        <input type="text" id="value-input" placeholder="Value" />
+        <input type="text" id="expired-input" placeholder="Expired (in days)" />
+        <button id="add-task-btn">Add Task</button>
+      </div>
+      <div id="task-list"></div>
+    </div>
+    <script>
+      // Function to create a new task
+      function createTask(key, value, expired) {
+        const task = document.createElement("div");
+        task.classList.add("task");
+
+        const taskInfo = document.createElement("span");
+        taskInfo.textContent = `Key: ${key}, Value: ${value}, Expired: ${expired} days`;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.addEventListener("click", () => {
+          task.remove();
+          deleteCookie(key);
+        });
+
+        task.appendChild(taskInfo);
+        task.appendChild(deleteButton);
+
+        document.getElementById("task-list").appendChild(task);
+
+        setCookie(key, value, expired);
+      }
+
+      // Function to set a cookie
+      function setCookie(key, value, expired) {
+        const date = new Date();
+        date.setTime(date.getTime() + expired * 24 * 60 * 60 * 1000);
+        const expires = new Date(Date.now() + 60000).toUTCString();
+        document.cookie = key + "=" + value + ";" + expires + ";path=/";
+      }
+
+      // Function to delete a cookie
+      function deleteCookie(key) {
+        document.cookie =
+          key + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      }
+
+      // Function to retrieve all cookies
+      function getAllCookies() {
+        const cookies = document.cookie.split(";");
+        const cookieData = {};
+
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim().split("=");
+          const key = cookie[0];
+          const value = cookie[1];
+          cookieData[key] = value;
+        }
+
+        return cookieData;
+      }
+
+      // Function to load existing tasks from cookies
+      function loadTasks() {
+        const cookieData = getAllCookies();
+
+        for (const key in cookieData) {
+          if (cookieData.hasOwnProperty(key)) {
+            const value = cookieData[key];
+            createTask(key, value, "");
+          }
+        }
+      }
+
+      // Event listener for 'Add Task' button
+      document.getElementById("add-task-btn").addEventListener("click", () => {
+        const keyInput = document.getElementById("key-input");
+        const valueInput = document.getElementById("value-input");
+        const expiredInput = document.getElementById("expired-input");
+
+        const key = keyInput.value.trim();
+        const value = valueInput.value.trim();
+        const expired = parseInt(expiredInput.value);
+
+        if (key && value && expired) {
+          createTask(key, value, expired);
+          keyInput.value = "";
+          valueInput.value = "";
+          expiredInput.value = "";
+        }
+      });
+
+      // Load existing tasks when the page loads
+      loadTasks();
+    </script>
+  </body>
+</html>

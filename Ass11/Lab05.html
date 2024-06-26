@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>BookShop</title>
+    <style>
+      .container {
+        display: flex;
+      }
+      .addBook {
+        flex-grow: 1;
+        height: 600px;
+        background-color: aqua;
+        padding: 20px;
+      }
+      .showBookAdd {
+        flex-grow: 20;
+        height: 600px;
+        background-color: aquamarine;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 20px;
+      }
+      .book {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        width: 200px;
+        height: 200px;
+        background-color: antiquewhite;
+        padding: 10px;
+        position: relative; /* To position delete/change buttons */
+      }
+      .book .info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%; /* Ensure the info takes full height */
+      }
+      .book .info p {
+        position: relative;
+        margin: 0;
+      }
+      .book img {
+        margin-top: 50%;
+        width: 80px; /* Adjust image width as needed */
+        height: 80px; /* Adjust image height as needed */
+        object-fit: contain; /* Ensure image fits within container */
+      }
+      .book .actions {
+        position: absolute;
+        top: 5px; /* Adjust top position as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="addBook">
+        <div class="name">
+          <p>Name:</p>
+          <input type="text" id="bookName" />
+        </div>
+        <div class="category">
+          <p>Category:</p>
+          <input type="text" id="bookCategory" />
+        </div>
+        <div class="price">
+          <p>Price:</p>
+          <input type="text" id="bookPrice" />
+        </div>
+        <div class="button">
+          <button onclick="addBook()">Add</button>
+        </div>
+      </div>
+      <div class="showBookAdd" id="bookContainer">
+        <!-- Book items will be dynamically added here -->
+      </div>
+    </div>
+
+    <script>
+      function addBook() {
+        const bookName = document.getElementById("bookName").value;
+        const bookCategory = document.getElementById("bookCategory").value;
+        const bookPrice = document.getElementById("bookPrice").value;
+
+        const bookContainer = document.createElement("div");
+        bookContainer.className = "book";
+        bookContainer.innerHTML = `
+                <div class="info">
+                    <img src="image.png" alt="Book Image">
+                    <p>Name: ${bookName}</p>
+                    <p>Price: ${bookPrice}</p>
+                    <p>Category: ${bookCategory}</p>
+                    <div class="actions">
+                        <button onclick="deleteBook(this)">Delete</button>
+                        <button onclick="changeName(this)">Change Name</button>
+                    </div>
+                </div>
+            `;
+
+        document.getElementById("bookContainer").appendChild(bookContainer);
+      }
+
+      function deleteBook(element) {
+        const book = element.closest(".book");
+        book.remove();
+      }
+
+      function changeName(element) {
+        const newName = prompt("Enter new name:");
+        if (newName) {
+          element
+            .closest(".info")
+            .querySelector("p:first-child").textContent = `Name: ${newName}`;
+        }
+      }
+    </script>
+  </body>
+</html>

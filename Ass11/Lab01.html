@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Run4ever</title>
+  </head>
+  <style>
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .boxColor {
+      width: 600px;
+      height: 600px;
+      background-color: rgb(62, 244, 184);
+      position: relative;
+      border: 2px solid rgb(30, 37, 36);
+      border-radius: 15px;
+    }
+    button {
+      width: 160px;
+      height: 60px;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 20px;
+      border: 2px solid rgb(30, 37, 36);
+      border-radius: 15px;
+      background-color: rgb(243, 66, 66);
+      color: aliceblue;
+      position: absolute;
+    }
+  </style>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/20.0.0/tween.umd.js"></script>
+
+    <div class="container">
+      <div class="boxColor">
+        <button id="runawayButton">Click Me Somvor🙏🏿</button>
+      </div>
+    </div>
+  </body>
+  <script>
+    const button = document.getElementById("runawayButton");
+    const box = document.querySelector(".boxColor");
+
+    function moveButton(newX, newY) {
+      const position = {
+        x: parseFloat(button.style.left) || 0,
+        y: parseFloat(button.style.top) || 0,
+      };
+      const target = { x: newX, y: newY };
+
+      new TWEEN.Tween(position)
+        .to(target, 1000)
+        .easing(TWEEN.Easing.Cubic.Out) // Use Cubic.Out for a smoother transition
+        .onUpdate(() => {
+          button.style.left = `${position.x}px`;
+          button.style.top = `${position.y}px`;
+        })
+        .start();
+    }
+
+    box.addEventListener("mousemove", (event) => {
+      const buttonRect = button.getBoundingClientRect();
+      const boxRect = box.getBoundingClientRect();
+
+      const distanceX = event.clientX - buttonRect.left;
+      const distanceY = event.clientY - buttonRect.top;
+
+      const buffer = 100;
+
+      if (Math.abs(distanceX) < buffer && Math.abs(distanceY) < buffer) {
+        // Calculate new random position
+        const newX = Math.random() * (boxRect.width - buttonRect.width);
+        const newY = Math.random() * (boxRect.height - buttonRect.height);
+
+        moveButton(newX, newY);
+      }
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      TWEEN.update();
+    }
+
+    animate();
+  </script>
+</html>

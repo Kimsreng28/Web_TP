@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Canvas</title>
+    <style>
+      .container {
+        margin: 5%;
+        width: 600px;
+        height: 600px;
+        background-color: antiquewhite;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .cameraVideo {
+        margin: 2%;
+        background-color: aqua;
+        width: 95%;
+        height: 90%;
+        position: relative;
+      }
+      .chooseImage {
+        display: flex;
+        flex-direction: column;
+        margin: 2%;
+      }
+      .chose {
+        display: flex;
+        justify-content: center;
+      }
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="cameraVideo">
+        <canvas id="myCanvas"></canvas>
+      </div>
+      <div class="chooseImage">
+        <div class="canvas">
+          <p
+            style="
+              font-family: 'Trebuchet MS', 'Lucida Sans Unicode',
+                'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            "
+          >
+            Canvas🐳: Please show your face on me!
+          </p>
+        </div>
+        <div class="chose">
+          <button id="toggleButton">Push</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/20.0.0/tween.umd.js"></script>
+    <script>
+      const canvas = document.getElementById("myCanvas");
+      const ctx = canvas.getContext("2d");
+      const toggleButton = document.getElementById("toggleButton");
+      const container = document.querySelector(".cameraVideo");
+      let videoStream = null;
+      let drawing = false;
+      let streaming = false;
+      let video;
+
+      // Resize the canvas to fit the container
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+
+      function startCamera() {
+        video = document.createElement("video");
+        video.width = canvas.width;
+        video.height = canvas.height;
+        navigator.mediaDevices
+          .getUserMedia({ video: true })
+          .then((stream) => {
+            videoStream = stream;
+            video.srcObject = stream;
+            video.play();
+
+            video.addEventListener("play", () => {
+              const drawVideo = () => {
+                if (video.paused || video.ended) return;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                if (drawing) {
+                  drawOnCanvas();
+                }
+                requestAnimationFrame(drawVideo);
+              };
+              drawVideo();
+            });
+          })
+          .catch((err) => {
+            console.error("Error accessing the camera: " + err);
+          });
+      }
+
+      function stopCamera() {
+        if (videoStream) {
+          let tracks = videoStream.getTracks();
+          tracks.forEach((track) => track.stop());
+          videoStream = null;
+        }
+        if (video) {
+          video.pause();
+          video.srcObject = null;
+          video = null;
+        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+      }
+
+      toggleButton.addEventListener("click", () => {
+        if (!streaming) {
+          startCamera();
+          toggleButton.textContent = "Stop";
+        } else {
+          stopCamera();
+          toggleButton.textContent = "Push";
+        }
+        streaming = !streaming;
+      });
+
+      // Add drawing capabilities
+      canvas.addEventListener("mousedown", () => {
+        drawing = true;
+      });
+
+      canvas.addEventListener("mouseup", () => {
+        drawing = false;
+        ctx.beginPath();
+      });
+
+      canvas.addEventListener("mousemove", (event) => {
+        if (!drawing) return;
+        drawOnCanvas(event);
+      });
+
+      function drawOnCanvas(event = null) {
+        ctx.lineWidth = 5;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = "black";
+
+        if (event) {
+          ctx.lineTo(
+            event.clientX - canvas.offsetLeft,
+            event.clientY - canvas.offsetTop
+          );
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(
+            event.clientX - canvas.offsetLeft,
+            event.clientY - canvas.offsetTop
+          );
+        }
+      }
+    </script>
+  </body>
+</html>

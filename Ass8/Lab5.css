@@ -1,0 +1,68 @@
+.barMenu {
+  position: relative;
+}
+
+button {
+  position: absolute;
+  border: none;
+  cursor: pointer;
+  top: 5%;
+  left: 90%;
+}
+.bar hr {
+  width: 25px;
+  height: 2px;
+  background-color: black;
+}
+.side-bar {
+  position: absolute;
+  top: 2.5%;
+  left: 5%;
+  font-size: 30px;
+}
+.side-bar-x {
+  position: absolute;
+  top: 0.5%;
+  left: 90%;
+  font-size: 40px;
+  size: 20px;
+  color: red;
+}
+
+.overlay {
+  height: 100%;
+  position: fixed;
+  background-color: #96e124;
+  overflow-x: hidden;
+  transition: 0.5s;
+}
+
+.overlay-content {
+  position: relative;
+  top: 10%;
+  left: 5%;
+  width: 100%;
+}
+
+.overlay a {
+  padding: 10px;
+  text-decoration: none;
+  font-size: 20px;
+  color: rgb(24, 24, 24);
+  display: block;
+  transition: 0.3s;
+}
+
+.overlay a:hover,
+.overlay a:focus {
+  color: rgb(9, 103, 233);
+}
+
+.emoji {
+  display: flex;
+  position: absolute;
+  top: 80%;
+  left: 20%;
+  gap: 20px;
+  filter: blur(0.5px);
+}

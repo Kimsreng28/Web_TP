@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Local Storage</title>
+  </head>
+
+  <style>
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5%;
+      width: 700px;
+      height: 100px;
+      background-color: aqua;
+      border: 2px solid gold;
+      border-radius: 10px;
+      font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
+    }
+
+    input {
+      width: 150px;
+      height: 25px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .add {
+      margin-top: 50px;
+      width: 80px;
+      height: 30px;
+      border: none;
+      border-radius: 10px;
+      background-color: blueviolet;
+      color: aliceblue;
+    }
+
+    .add:hover {
+      background-color: rgb(96, 12, 251);
+    }
+
+    .task-box {
+      margin-top: 10px;
+      padding: 10px;
+      width: 680px;
+      background-color: #f0f0f0;
+      border: 1px solid #327a27;
+      border-radius: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .task-info {
+      padding: 10px;
+    }
+
+    .delete-btn {
+      padding: 5px 10px;
+      background-color: rgb(219, 23, 23);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .delete-btn:hover {
+      background-color: rgb(255, 0, 0);
+    }
+  </style>
+
+  <body>
+    <div class="container">
+      <div class="title">
+        <p class="text" style="font-size: 30px">Todo List local Storage!</p>
+      </div>
+
+      <div class="box">
+        <div class="titalName">
+          <p class="Name">Title</p>
+          <input type="text" id="title" />
+        </div>
+
+        <div class="assigneeName">
+          <p class="assignee">Assignee</p>
+          <input type="text" id="assignee" />
+        </div>
+
+        <div class="Calender">
+          <p class="date">Date</p>
+          <input type="date" id="date" />
+        </div>
+
+        <div class="button">
+          <button class="add" id="add">Add</button>
+        </div>
+      </div>
+
+      <div class="showData">
+        <!-- Tasks will be dynamically added here -->
+      </div>
+    </div>
+
+    <script>
+      document.getElementById("add").addEventListener("click", function () {
+        var title = document.getElementById("title").value;
+        var assignee = document.getElementById("assignee").value;
+        var date = document.getElementById("date").value;
+
+        if (title && assignee && date) {
+          var task = {
+            title: title,
+            assignee: assignee,
+            date: date,
+          };
+          var tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+          tasks.push(task);
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+
+          // Clear input fields after adding task
+          document.getElementById("title").value = "";
+          document.getElementById("assignee").value = "";
+          document.getElementById("date").value = "";
+
+          // Refresh task list
+          displayTasks();
+        } else {
+          alert("Please fill in all fields.");
+        }
+      });
+
+      function displayTasks() {
+        var tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        var taskList = document.querySelector(".showData");
+        taskList.innerHTML = "";
+
+        tasks.forEach(function (task, index) {
+          var taskBox = document.createElement("div");
+          taskBox.classList.add("task-box");
+
+          var title = document.createElement("p");
+          title.textContent = task.title;
+
+          var assignee = document.createElement("p");
+          assignee.textContent = task.assignee;
+
+          var date = document.createElement("p");
+          date.textContent = task.date;
+
+          var deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "Delete";
+          deleteBtn.classList.add("delete-btn");
+          deleteBtn.setAttribute("data-index", index); // Set data attribute for identifying the task
+
+          taskBox.appendChild(title);
+          taskBox.appendChild(assignee);
+          taskBox.appendChild(date);
+          taskBox.appendChild(deleteBtn);
+
+          taskList.appendChild(taskBox);
+        });
+
+        // Add event listener to delete buttons
+        var deleteButtons = document.querySelectorAll(".delete-btn");
+        deleteButtons.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var index = parseInt(btn.getAttribute("data-index"));
+            deleteTask(index);
+          });
+        });
+      }
+
+      function deleteTask(index) {
+        var tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        tasks.splice(index, 1); // Remove task at the specified index
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        displayTasks(); // Refresh task list after deletion
+      }
+
+      // Call displayTasks to initially populate the task list
+      displayTasks();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>LoginWithCookie</title>
+    <style>
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2%;
+        width: 600px;
+        height: 600px;
+        background-color: rgb(255, 255, 255);
+      }
+      .login {
+        padding: 2%;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        width: 100%;
+        height: 480px;
+        border: 2px solid black;
+        background-color: rgb(211, 207, 201);
+      }
+      .profile {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 250px;
+        padding: 1%;
+      }
+      .email {
+        display: flex;
+        justify-content: center;
+        margin: 1%;
+        display: flex;
+        flex-direction: column;
+        padding: 1%;
+      }
+      p {
+        font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+          "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+        font-size: 15px;
+      }
+      img {
+        width: 200px;
+      }
+      input {
+        font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+          "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+        width: 310%;
+        height: 30px;
+        border-radius: 10px;
+      }
+      .pass {
+        margin: 1%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 1%;
+      }
+
+      .log {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1%;
+      }
+      button {
+        border: 2px solid;
+        border-radius: 10px;
+        width: 585px;
+        height: 35px;
+        font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+          "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+        font-size: 15px;
+        background-color: rgb(136, 210, 62);
+      }
+      button:hover {
+        background-color: greenyellow;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="center">
+        <div class="info">
+          <p>Give Login Info:</p>
+          <p>Email: Kim@gmail.com</p>
+          <p>Password: Kim123</p>
+        </div>
+        <div class="login">
+          <div class="profile">
+            <img src="./image.png" alt="" />
+          </div>
+          <div class="email">
+            <p>Email</p>
+            <input type="email" id="email" name="email" />
+          </div>
+          <div class="pass">
+            <p>Password</p>
+            <input type="password" id="pwd" name="pwd" minlength="8" />
+          </div>
+          <div class="log">
+            <button id="loginButton">Login</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const fakeEmail = "Kim@gmail.com";
+      const fakePassword = "Kim123";
+
+      document
+        .getElementById("loginButton")
+        .addEventListener("click", function () {
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("pwd").value;
+
+          if (email === fakeEmail && password === fakePassword) {
+            // Set cookie for 1 day
+            document.cookie =
+              "loggedIn=true; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
+            window.location.href = "Lab04a.html";
+          } else {
+            alert("Invalid email or password!");
+          }
+        });
+
+      // Check if cookie exists and redirect accordingly
+      window.onload = function () {
+        const loggedIn = document.cookie
+          .split(";")
+          .some((item) => item.trim().startsWith("loggedIn="));
+        if (loggedIn) {
+          window.location.href = "Lab04a.html";
+        }
+      };
+    </script>
+  </body>
+</html>

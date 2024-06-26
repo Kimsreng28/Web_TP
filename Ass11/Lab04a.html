@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Welcome Page</title>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Welcome To Home Page</h2>
+      <p>You will be automatically logged out</p>
+      <p>Keep refreshing your page</p>
+      <button id="logoutButton">Log Out</button>
+    </div>
+
+    <script>
+      document
+        .getElementById("logoutButton")
+        .addEventListener("click", function () {
+          // Clear the loggedIn cookie by setting its expiration to the past
+          document.cookie =
+            "loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+          // Redirect to the login page
+          window.location.href = "Lab04.html";
+        });
+    </script>
+  </body>
+</html>
